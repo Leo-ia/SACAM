@@ -39,36 +39,71 @@ Flujo funcional de registro del propietario y su moto. **Objetivo del sprint:** 
 | 1 | Crear base de datos con las tablas diseñadas  | —    | Hecho    |
 | 2 | Archivo de conexión PDO reutilizable          | 1    | Pendiente |
 | 3 | Funciones de validación reutilizables         | —    | Pendiente |
-| 4 | Página de inicio (HTML/CSS colores IPN)        | —    | Pendiente |
-| 5 | Formulario de registro de usuario (frontend)   | 4    | Pendiente |
+| 4 | Página de inicio (HTML/CSS colores IPN)        | —    | Hecho (frontend) |
+| 5 | Formulario de registro de usuario (frontend)   | 4    | Hecho (frontend) |
 | 6 | Procesamiento backend del formulario de usuario | 2,3,5 | Pendiente |
-| 7 | Formulario de registro de moto (frontend)       | 6    | Pendiente |
+| 7 | Formulario de registro de moto (frontend)       | 6    | Hecho (frontend) |
 | 8 | Procesamiento backend del formulario de moto (transacción) | 2,3,7 | Pendiente |
-| 9 | Aviso de privacidad simplificado (LGPDPPSO)    | 5,7  | Pendiente |
+| 9 | Aviso de privacidad simplificado (LGPDPPSO)    | 5,7  | Hecho (frontend, en registro_usuario.php) |
 | 10 | Pruebas manuales del flujo completo            | todas | Pendiente |
+
+Las tareas 4, 5, 7 y 9 quedan cubiertas solo del lado del **frontend**: maquetado,
+estilos con la paleta IPN, validación de cliente y el checklist del aviso de
+privacidad. El guardado real en la base de datos (backend, tareas 2, 3, 6 y 8)
+sigue pendiente. Detalle completo en
+[`docs/sprint1/sprint1.md`](docs/sprint1/sprint1.md).
 
 **Historias de usuario:** HU-01 página de inicio · HU-02 registro de usuario · HU-03 registro de motocicleta · HU-04 persistencia confiable (transacción todo-o-nada).
 
 ## Estructura de carpetas
 
+La división de carpetas ya está pensada para **todo el proyecto** (los tres
+meses de la propuesta), no solo para el Sprint 1. Los tres perfiles de la
+propuesta técnica (usuario, guardia, administrador) tienen ya su lugar
+reservado en `app/` y `public/`, aunque `guardia/` y `administrador/` se
+llenan hasta los Sprints 2 y 3 (QR, escaneo, panel de control).
+
 ```
-sacam/
+SACAM/
 ├── app/
-│   ├── includes/          # Tarea 2: conexión PDO · Tarea 3: validaciones
-│   └── procesos/          # Backend de formularios (tareas 6 y 8)
-├── config/                # Configuración (credenciales fuera de public/)
+│   ├── includes/           # Tarea 2: conexión PDO · Tarea 3: validaciones
+│   │                       # (compartidas por los tres perfiles)
+│   ├── procesos/           # Backend de los formularios públicos (tareas 6 y 8)
+│   ├── vistas/
+│   │   └── partials/       # Header, footer y aviso de privacidad reutilizables
+│   ├── guardia/            # Lógica del perfil guardia — Sprint 2+
+│   └── administrador/      # Lógica del perfil administrador — Sprint 3+
+├── config/                 # Configuración (credenciales fuera de public/)
 ├── database/
 │   └── sacam_bd_sprint1.sql   # ← Tarea 1 · esquema de la BD (entregable actual)
 ├── docs/
-│   └── sprint1/           # Análisis y evidencia del sprint
-├── public/                # Raíz pública del servidor web (document root)
-│   ├── css/               # Colores IPN: guinda #750946, gris #636569
-│   ├── js/
-│   └── …páginas (inicio, registro_usuario, registro_moto, confirmación)
-└── uploads/               # Archivos subidos (fuera del control de versiones)
-    ├── credenciales/      # Fotos de credencial IPN (LGPDPPSO)
-    └── motocicletas/      # Fotos de las motos
+│   └── sprint1/             # Análisis y evidencia del sprint
+├── public/                  # Raíz pública del servidor web (document root)
+│   ├── css/estilos.css      # Colores IPN: guinda #750946, gris #636569
+│   ├── js/validaciones.js   # Validación de cliente (HU-02, HU-03)
+│   ├── img/                 # Imágenes públicas (vacío por ahora)
+│   ├── index.php            # HU-01 · página de inicio
+│   ├── registro_usuario.php # HU-02 · paso 1 del trámite
+│   ├── registro_moto.php    # HU-03 · paso 2 del trámite
+│   ├── confirmacion.php     # Paso 3 · confirmación
+│   ├── guardia/              # Páginas del perfil guardia — Sprint 2+
+│   └── administrador/        # Páginas del perfil administrador — Sprint 3+
+└── uploads/                 # Archivos subidos (fuera del control de versiones)
+    ├── credenciales/        # Fotos de credencial IPN (LGPDPPSO)
+    └── motocicletas/        # Fotos de las motos
 ```
+
+**Por qué `vistas/partials/` y no todo suelto en `public/`.** El header, el
+footer y el aviso de privacidad se repiten en las cuatro páginas del trámite;
+vivir en `app/vistas/partials/` (fuera de la raíz pública) evita que alguien
+los pida por URL directamente y mantiene `app/includes/` reservado solo para
+infraestructura (conexión a BD y validaciones), tal como pide el backlog.
+
+**Por qué las páginas públicas siguen siendo controladores delgados.** Cada
+archivo en `public/` (`index.php`, `registro_usuario.php`, …) es el punto de
+entrada que el servidor sí puede servir; cuando lleguen las tareas 6 y 8,
+esos mismos archivos incluirán la lógica de `app/procesos/` para procesar el
+`$_POST`, sin mover nada de carpeta.
 
 ## Base de datos (Sprint 1 · Tarea 1)
 
@@ -86,6 +121,49 @@ mysql -u usuario -p < database/sacam_bd_sprint1.sql
 ```
 
 Requiere MySQL 8+ o MariaDB 10.2+ (por las `CHECK CONSTRAINT`).
+
+## Frontend (Sprint 1 · Tareas 4, 5, 7 y 9)
+
+Cubre el maquetado y la interacción de cliente de las cuatro pantallas del
+trámite: `index.php` (HU-01), `registro_usuario.php` (HU-02),
+`registro_moto.php` (HU-03) y `confirmacion.php`.
+
+- **Identidad visual.** Guinda `#750946` como color de acción (botones,
+  enlaces, encabezado, paso activo), gris `#636569` para texto secundario,
+  blanco de fondo y negro para texto de alto contraste. Tipografía Noto Sans
+  en todo el sitio. El rojo de error y el ámbar de "pendiente de actualizar"
+  no vienen del manual del IPN: son colores funcionales, necesarios para que
+  el formulario pueda señalar errores y datos pendientes (documentado en
+  `public/css/estilos.css`).
+- **Flujo como trámite, no como sitio de marketing.** Contenido alineado a la
+  izquierda, ancho de línea corto y un indicador de pasos (1 Datos
+  personales · 2 Motocicleta · 3 Confirmación) porque el registro sí es un
+  proceso secuencial real.
+- **Validación de cliente (`public/js/validaciones.js`).** Errores junto a
+  cada campo (no una alerta genérica), verificación de formato de correo,
+  verificación de formato/peso de imagen antes de enviarse, y textos que
+  cambian según el tipo de persona (boleta vs. número de empleado) y el tipo
+  de placa (placa definitiva vs. permiso provisional). Esta validación es
+  solo de experiencia de usuario: la validación obligatoria sigue siendo la
+  del servidor (tareas 3, 6 y 8).
+- **Aviso de privacidad (LGPDPPSO).** Vive en
+  `app/vistas/partials/aviso_privacidad.php` y se incluye una sola vez, en
+  `registro_usuario.php`, con checkbox obligatorio para continuar.
+- **Sin backend todavía.** Como las tareas 6 y 8 (procesamiento y guardado
+  real) no están hechas, los formularios usan temporalmente `method="get"`
+  para encadenar `registro_usuario.php → registro_moto.php →
+  confirmacion.php` y así poder mostrar el flujo completo en la demo del
+  jueves. Está documentado con comentarios `NOTA TÉCNICA` en cada archivo:
+  cuando el backend exista, el cambio a `method="post"` es directo y no
+  requiere tocar el HTML de los formularios.
+
+### Previsualizar el frontend
+
+```bash
+php -S localhost:8000 -t public
+```
+
+Y abrir `http://localhost:8000/index.php` en el navegador.
 
 ## Definition of Done (Sprint 1)
 
