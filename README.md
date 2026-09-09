@@ -8,13 +8,13 @@ Aplicación para digitalizar el registro y la verificación de motocicletas en l
 
 ---
 
-## 🏬 Contexto del negocio
+## Contexto del negocio
 
 Se busca eliminar el cuello de botella del registro manual (fotografía + papel) en las entradas de la escuela: el guardia en turno podrá escanear un QR, ver al instante los datos y fotografías del conductor, y dejar un **historial trazable de entradas y salidas** que sirva como evidencia ante incidentes, disuadiendo el robo por suplantación.
 
 El sistema **no** automatiza barreras ni faculta al personal a impedir el tránsito: opera como herramienta de registro y verificación, conforme al reglamento del IPN.
 
-## 🛠️ Tecnologías
+## Tecnologías
 
 | Capa               | Tecnología                          |
 |--------------------|-------------------------------------|
@@ -27,29 +27,29 @@ El sistema **no** automatiza barreras ni faculta al personal a impedir el tráns
 | Hosting            | Hostinger                           |
 | Control de versiones | Git + GitHub                      |
 
-## 📅 Metodología y sprint
+## Metodología y sprint
 
 Desarrollo iterativo bajo **Scrum** en un plazo de 3 meses. El repositorio se organiza por **sprints**; el estado de cada uno queda documentado en `docs/`.
 
 ### Sprint 1 (entrega: este corte)
 Flujo funcional de registro del propietario y su moto. **Objetivo del sprint:** que cualquier miembro de la comunidad politécnica pueda registrarse a sí mismo y a su motocicleta, quedando la información almacenada correctamente en la BD.
 
-| # | Tarea                                        | Dep. | Estado |
-|---|----------------------------------------------|------|--------|
-| 1 | Crear base de datos con las tablas diseñadas  | —    | ✅ |
-| 2 | Archivo de conexión PDO reutilizable          | 1    | ⬜ |
-| 3 | Funciones de validación reutilizables         | —    | ⬜ |
-| 4 | Página de inicio (HTML/CSS colores IPN)        | —    | ⬜ |
-| 5 | Formulario de registro de usuario (frontend)   | 4    | ⬜ |
-| 6 | Procesamiento backend del formulario de usuario | 2,3,5 | ⬜ |
-| 7 | Formulario de registro de moto (frontend)       | 6    | ⬜ |
-| 8 | Procesamiento backend del formulario de moto (transacción) | 2,3,7 | ⬜ |
-| 9 | Aviso de privacidad simplificado (LGPDPPSO)    | 5,7  | ⬜ |
-| 10 | Pruebas manuales del flujo completo            | todas | ⬜ |
+| # | Tarea                                        | Dep. | Estado   |
+|---|----------------------------------------------|------|----------|
+| 1 | Crear base de datos con las tablas diseñadas  | —    | Hecho    |
+| 2 | Archivo de conexión PDO reutilizable          | 1    | Pendiente |
+| 3 | Funciones de validación reutilizables         | —    | Pendiente |
+| 4 | Página de inicio (HTML/CSS colores IPN)        | —    | Pendiente |
+| 5 | Formulario de registro de usuario (frontend)   | 4    | Pendiente |
+| 6 | Procesamiento backend del formulario de usuario | 2,3,5 | Pendiente |
+| 7 | Formulario de registro de moto (frontend)       | 6    | Pendiente |
+| 8 | Procesamiento backend del formulario de moto (transacción) | 2,3,7 | Pendiente |
+| 9 | Aviso de privacidad simplificado (LGPDPPSO)    | 5,7  | Pendiente |
+| 10 | Pruebas manuales del flujo completo            | todas | Pendiente |
 
 **Historias de usuario:** HU-01 página de inicio · HU-02 registro de usuario · HU-03 registro de motocicleta · HU-04 persistencia confiable (transacción todo-o-nada).
 
-## 🧱 Estructura de carpetas
+## Estructura de carpetas
 
 ```
 sacam/
@@ -70,7 +70,7 @@ sacam/
     └── motocicletas/      # Fotos de las motos
 ```
 
-## 🗄️ Base de datos (Sprint 1 · Tarea 1)
+## Base de datos (Sprint 1 · Tarea 1)
 
 El esquema vive en [`database/sacam_bd_sprint1.sql`](database/sacam_bd_sprint1.sql). Diseño pensado para **no rediseñarse** cuando lleguen QR, cuentas de guardia/administrador y bitácora (esa parte se entrega comentada, para su sprint).
 
@@ -87,13 +87,13 @@ mysql -u usuario -p < database/sacam_bd_sprint1.sql
 
 Requiere MySQL 8+ o MariaDB 10.2+ (por las `CHECK CONSTRAINT`).
 
-## ✅ Definition of Done (Sprint 1)
+## Definition of Done (Sprint 1)
 
 - El formulario correspondiente guarda correctamente en la BD.
 - Validaciones de servidor (no solo de cliente) funcionando.
 - Imágenes guardadas con nombre único en la carpeta correcta.
 - Probado manualmente: caso exitoso, campo obligatorio vacío, imagen inválida y permiso provisional sin placa.
 
-## ⚖️ Privacidad
+## Privacidad
 
 El IPN, al ser sujeto obligado por la LGPDPPSO, debe informar qué datos se recaban antes de recabarlos. Por eso los formularios del sprint incluyen un **aviso de privacidad simplificado** con checkbox de aceptación, y las fotos personales **nunca se versionan** en este repositorio (ver `.gitignore`).
