@@ -1,0 +1,576 @@
+/* =============================================================================
+   SACAM · Hoja de estilos principal
+   -----------------------------------------------------------------------------
+   Paleta e identidad tomadas del manual de diseño institucional del IPN
+   (documentado en Sprint1_Backlog.md, sección 6):
+     - Guinda   #750946  (Pantone 222 C) — color principal / acento
+     - Gris     #636569  — color secundario / texto
+     - Blanco   #FFFFFF  — fondo
+     - Negro    #000000  — texto de alto contraste
+     - Tipografía: Noto Sans, en todo el sistema
+   Los colores de error y de advertencia (sección "Tokens funcionales") no
+   pertenecen al manual del IPN: son necesarios para que el formulario pueda
+   señalar errores y datos pendientes, como ya hacen otros trámites en línea
+   de instituciones públicas mexicanas.
+   ============================================================================= */
+
+:root {
+  --guinda: #750946;
+  --guinda-oscuro: #52062f;
+  --gris: #636569;
+  --gris-linea: #d9d9db;
+  --gris-superficie: #f4f4f5;
+  --blanco: #ffffff;
+  --negro: #000000;
+
+  /* Tokens funcionales (fuera del manual, uso exclusivo de estado) */
+  --error: #a8241c;
+  --error-superficie: #fbeae8;
+  --advertencia-texto: #7a4a05;
+  --advertencia-superficie: #fbedcf;
+
+  --fuente: 'Noto Sans', 'Segoe UI', Arial, sans-serif;
+
+  --ancho-contenido: 46rem;
+  --radio: 4px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--fuente);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--negro);
+  background: var(--blanco);
+}
+
+.contenedor {
+  max-width: var(--ancho-contenido);
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+.salto-contenido {
+  position: absolute;
+  left: -999px;
+  top: auto;
+}
+
+.salto-contenido:focus {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  z-index: 100;
+  background: var(--guinda);
+  color: var(--blanco);
+  padding: 0.6rem 1rem;
+  border-radius: var(--radio);
+}
+
+a {
+  color: var(--guinda);
+}
+
+:focus-visible {
+  outline: 3px solid var(--guinda);
+  outline-offset: 2px;
+}
+
+h1, h2, h3, h4 {
+  font-weight: 700;
+  line-height: 1.25;
+  margin: 0 0 0.6em;
+  color: var(--negro);
+}
+
+h1 { font-size: 2.25rem; }
+h2 { font-size: 1.5rem; margin-top: 2.25rem; }
+h3 { font-size: 1.15rem; font-weight: 600; }
+
+p {
+  margin: 0 0 1rem;
+}
+
+.texto-guia {
+  color: var(--gris);
+  max-width: 38rem;
+}
+
+/* -----------------------------------------------------------------------
+   Cabecera institucional
+   ----------------------------------------------------------------------- */
+
+.cabecera {
+  border-bottom: 1px solid var(--gris-linea);
+}
+
+.cabecera__franja {
+  height: 6px;
+  background: var(--guinda);
+}
+
+.cabecera__contenido {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.9rem;
+  flex-wrap: wrap;
+}
+
+.cabecera__institucion {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+
+.cabecera__ipn {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--negro);
+}
+
+.cabecera__escom {
+  font-size: 0.85rem;
+  color: var(--gris);
+}
+
+.cabecera__sistema {
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
+  color: var(--guinda);
+  text-decoration: none;
+  border: 1.5px solid var(--guinda);
+  border-radius: var(--radio);
+  padding: 0.3rem 0.75rem;
+}
+
+.cabecera__sistema:hover {
+  background: var(--guinda);
+  color: var(--blanco);
+}
+
+/* -----------------------------------------------------------------------
+   Indicador de pasos del trámite (proceso genuinamente secuencial)
+   ----------------------------------------------------------------------- */
+
+.pasos {
+  padding-block: 1.25rem;
+}
+
+.pasos__lista {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 0.5rem;
+}
+
+.pasos__item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--gris);
+}
+
+.pasos__numero {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  border: 1.5px solid var(--gris-linea);
+  font-size: 0.85rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.pasos__etiqueta {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.pasos__item--activo,
+.pasos__item--hecho {
+  color: var(--negro);
+}
+
+.pasos__item--activo .pasos__numero,
+.pasos__item--hecho .pasos__numero {
+  border-color: var(--guinda);
+  background: var(--guinda);
+  color: var(--blanco);
+}
+
+@media (max-width: 30rem) {
+  .pasos__etiqueta {
+    display: none;
+  }
+}
+
+/* -----------------------------------------------------------------------
+   Botones
+   ----------------------------------------------------------------------- */
+
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: var(--radio);
+  padding: 0.75rem 1.5rem;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+}
+
+.boton--primario {
+  background: var(--guinda);
+  color: var(--blanco);
+}
+
+.boton--primario:hover {
+  background: var(--guinda-oscuro);
+}
+
+.boton--secundario {
+  background: var(--blanco);
+  color: var(--guinda);
+  border-color: var(--guinda);
+}
+
+.boton--secundario:hover {
+  background: var(--gris-superficie);
+}
+
+/* -----------------------------------------------------------------------
+   Inicio (HU-01)
+   ----------------------------------------------------------------------- */
+
+.inicio-hero {
+  padding-block: 2rem 1rem;
+}
+
+.inicio-requisitos {
+  border-top: 1px solid var(--gris-linea);
+  padding-top: 1.5rem;
+}
+
+.lista-requisitos {
+  list-style: none;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.lista-requisitos__item {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.icono {
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  color: var(--guinda);
+}
+
+.lista-requisitos__titulo {
+  margin: 0 0 0.15rem;
+  font-weight: 600;
+}
+
+.lista-requisitos__detalle {
+  margin: 0;
+  color: var(--gris);
+  font-size: 0.9rem;
+}
+
+.inicio-quien {
+  border-top: 1px solid var(--gris-linea);
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+/* -----------------------------------------------------------------------
+   Formularios (HU-02 y HU-03)
+   ----------------------------------------------------------------------- */
+
+.formulario-seccion {
+  padding-block: 1.5rem 3rem;
+}
+
+.formulario-contexto {
+  background: var(--gris-superficie);
+  border-radius: var(--radio);
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.campo label,
+.campo__etiqueta-grupo {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.campo__opcional {
+  font-weight: 400;
+  color: var(--gris);
+}
+
+.campo input[type="text"],
+.campo input[type="email"],
+.campo select {
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.65rem 0.75rem;
+  border: 1.5px solid var(--gris-linea);
+  border-radius: var(--radio);
+  background: var(--blanco);
+  color: var(--negro);
+  max-width: 26rem;
+}
+
+.campo input[type="file"] {
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+.campo input:focus,
+.campo select:focus {
+  border-color: var(--guinda);
+}
+
+.campo--invalido input,
+.campo--invalido select {
+  border-color: var(--error);
+}
+
+.campo__ayuda {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--gris);
+}
+
+.campo__error {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--error);
+  min-height: 1.1em;
+}
+
+.campo__error:empty {
+  display: none;
+}
+
+.campo__opciones {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-weight: 400;
+}
+
+.campo__opcion {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 400;
+  font-size: 0.95rem;
+}
+
+.formulario__acciones {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+.formulario__acciones--dos {
+  justify-content: space-between;
+}
+
+/* -----------------------------------------------------------------------
+   Aviso de privacidad (LGPDPPSO)
+   ----------------------------------------------------------------------- */
+
+.aviso-privacidad {
+  background: var(--gris-superficie);
+  border-left: 4px solid var(--guinda);
+  border-radius: var(--radio);
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.aviso-privacidad__titulo {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.aviso-privacidad__texto {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--gris);
+}
+
+.aviso-privacidad__checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.aviso-privacidad__checkbox input {
+  margin-top: 0.2rem;
+}
+
+/* -----------------------------------------------------------------------
+   Confirmación
+   ----------------------------------------------------------------------- */
+
+.confirmacion {
+  padding-block: 2rem 3rem;
+  text-align: center;
+}
+
+.confirmacion__icono {
+  width: 3.5rem;
+  height: 3.5rem;
+  margin: 0 auto 1rem;
+  color: var(--guinda);
+}
+
+.resumen {
+  text-align: left;
+  border: 1px solid var(--gris-linea);
+  border-radius: var(--radio);
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.resumen__fila {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--gris-linea);
+}
+
+.resumen__fila:last-child {
+  border-bottom: none;
+}
+
+.resumen__fila dt {
+  color: var(--gris);
+  font-size: 0.9rem;
+}
+
+.resumen__fila dd {
+  margin: 0;
+  font-weight: 600;
+  text-align: right;
+}
+
+.etiqueta {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radio);
+  margin-left: 0.4rem;
+}
+
+.etiqueta--pendiente {
+  background: var(--advertencia-superficie);
+  color: var(--advertencia-texto);
+}
+
+/* -----------------------------------------------------------------------
+   Pie institucional
+   ----------------------------------------------------------------------- */
+
+.pie {
+  border-top: 1px solid var(--gris-linea);
+  margin-top: 3rem;
+}
+
+.pie__contenido {
+  padding-block: 1.5rem;
+}
+
+.pie__institucional {
+  margin: 0 0 0.25rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.pie__creditos {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--gris);
+}
+
+/* -----------------------------------------------------------------------
+   Responsivo
+   ----------------------------------------------------------------------- */
+
+@media (max-width: 30rem) {
+  h1 { font-size: 1.75rem; }
+
+  .cabecera__contenido {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .formulario__acciones,
+  .formulario__acciones--dos {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .boton {
+    width: 100%;
+  }
+
+  .resumen__fila {
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .resumen__fila dd {
+    text-align: left;
+  }
+}
