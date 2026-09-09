@@ -1,0 +1,15 @@
+# Datos personales subidos por los usuarios (fotos de credencial y moto).
+# Son datos sensibles conforme a la LGPDPPSO → NO deben versionarse.
+# Se conservan únicamente los marcadores .gitkeep para mantener la estructura.
+uploads/*
+!uploads/*/
+uploads/*/*
+!uploads/*/.gitkeep
+
+# Configuración local con credenciales de la base de datos.
+config/config.local.php
+
+# Logs y archivos del sistema operativo.
+*.log
+.DS_Store
+Thumbs.db
