@@ -37,21 +37,20 @@ Flujo funcional de registro del propietario y su moto. **Objetivo del sprint:** 
 | # | Tarea                                        | Dep. | Estado   |
 |---|----------------------------------------------|------|----------|
 | 1 | Crear base de datos con las tablas diseñadas  | —    | Hecho    |
-| 2 | Archivo de conexión PDO reutilizable          | 1    | Pendiente |
-| 3 | Funciones de validación reutilizables         | —    | Pendiente |
+| 2 | Archivo de conexión PDO reutilizable          | 1    | Hecho    |
+| 3 | Funciones de validación reutilizables         | —    | Hecho    |
 | 4 | Página de inicio (HTML/CSS colores IPN)        | —    | Hecho (frontend) |
 | 5 | Formulario de registro de usuario (frontend)   | 4    | Hecho (frontend) |
-| 6 | Procesamiento backend del formulario de usuario | 2,3,5 | Pendiente |
+| 6 | Procesamiento backend del formulario de usuario | 2,3,5 | Hecho |
 | 7 | Formulario de registro de moto (frontend)       | 6    | Hecho (frontend) |
-| 8 | Procesamiento backend del formulario de moto (transacción) | 2,3,7 | Pendiente |
+| 8 | Procesamiento backend del formulario de moto (transacción) | 2,3,7 | Hecho |
 | 9 | Aviso de privacidad simplificado (LGPDPPSO)    | 5,7  | Hecho (frontend, en registro_usuario.php) |
-| 10 | Pruebas manuales del flujo completo            | todas | Pendiente |
+| 10 | Pruebas manuales del flujo completo            | todas | Hecho (9/9 casos) |
 
-Las tareas 4, 5, 7 y 9 quedan cubiertas solo del lado del **frontend**: maquetado,
-estilos con la paleta IPN, validación de cliente y el checklist del aviso de
-privacidad. El guardado real en la base de datos (backend, tareas 2, 3, 6 y 8)
-sigue pendiente. Detalle completo en
-[`docs/sprint1/sprint1.md`](docs/sprint1/sprint1.md).
+El flujo completo ya guarda en la base de datos de punta a punta: los datos
+personales y de la motocicleta se insertan en una **transacción todo-o-nada**
+(HU-04) y las fotografías se almacenan con nombre único en `uploads/`.
+Detalle completo en [`docs/sprint1/sprint1.md`](docs/sprint1/sprint1.md).
 
 **Historias de usuario:** HU-01 página de inicio · HU-02 registro de usuario · HU-03 registro de motocicleta · HU-04 persistencia confiable (transacción todo-o-nada).
 
@@ -67,13 +66,16 @@ llenan hasta los Sprints 2 y 3 (QR, escaneo, panel de control).
 SACAM/
 ├── app/
 │   ├── includes/           # Tarea 2: conexión PDO · Tarea 3: validaciones
-│   │                       # (compartidas por los tres perfiles)
-│   ├── procesos/           # Backend de los formularios públicos (tareas 6 y 8)
+│   │   ├── conexion.php    #   función sacam_conexion() (PDO reutilizable)
+│   │   └── validaciones.php#   validación de servidor (usuario, moto, imágenes)
+│   ├── procesos/
+│   │   └── procesar_registro.php # Tareas 6 y 8: lógica de guardado (transacción)
 │   ├── vistas/
 │   │   └── partials/       # Header, footer y aviso de privacidad reutilizables
 │   ├── guardia/            # Lógica del perfil guardia — Sprint 2+
 │   └── administrador/      # Lógica del perfil administrador — Sprint 3+
-├── config/                 # Configuración (credenciales fuera de public/)
+├── config/
+│   └── config.local.php    # Credenciales de la BD (gitignored; copiar desde el template)
 ├── database/
 │   └── sacam_bd_sprint1.sql   # ← Tarea 1 · esquema de la BD (entregable actual)
 ├── docs/
@@ -85,6 +87,7 @@ SACAM/
 │   ├── index.php            # HU-01 · página de inicio
 │   ├── registro_usuario.php # HU-02 · paso 1 del trámite
 │   ├── registro_moto.php    # HU-03 · paso 2 del trámite
+│   ├── procesar_registro.php# Punto de entrada del backend (delega en app/)
 │   ├── confirmacion.php     # Paso 3 · confirmación
 │   ├── guardia/              # Páginas del perfil guardia — Sprint 2+
 │   └── administrador/        # Páginas del perfil administrador — Sprint 3+
@@ -101,9 +104,10 @@ infraestructura (conexión a BD y validaciones), tal como pide el backlog.
 
 **Por qué las páginas públicas siguen siendo controladores delgados.** Cada
 archivo en `public/` (`index.php`, `registro_usuario.php`, …) es el punto de
-entrada que el servidor sí puede servir; cuando lleguen las tareas 6 y 8,
-esos mismos archivos incluirán la lógica de `app/procesos/` para procesar el
-`$_POST`, sin mover nada de carpeta.
+entrada que el servidor sí puede servir. El backend vive en `app/` —fuera de la
+raíz pública—, así que `public/procesar_registro.php` es la única puerta que
+recibe el `POST` del formulario y delega la lógica real a
+`app/procesos/procesar_registro.php`.
 
 ## Base de datos (Sprint 1 · Tarea 1)
 
@@ -148,14 +152,63 @@ trámite: `index.php` (HU-01), `registro_usuario.php` (HU-02),
   del servidor (tareas 3, 6 y 8).
 - **Aviso de privacidad (LGPDPPSO).** Vive en
   `app/vistas/partials/aviso_privacidad.php` y se incluye una sola vez, en
-  `registro_usuario.php`, con checkbox obligatorio para continuar.
-- **Sin backend todavía.** Como las tareas 6 y 8 (procesamiento y guardado
-  real) no están hechas, los formularios usan temporalmente `method="get"`
-  para encadenar `registro_usuario.php → registro_moto.php →
-  confirmacion.php` y así poder mostrar el flujo completo en la demo del
-  jueves. Está documentado con comentarios `NOTA TÉCNICA` en cada archivo:
-  cuando el backend exista, el cambio a `method="post"` es directo y no
-  requiere tocar el HTML de los formularios.
+  `registro_usuario.php`, con checkbox obligatorio para continuar. Su
+  aceptación también se exige del lado del servidor (no basta con JavaScript).
+- **Flujo por POST con sesión (backend integrado).** Los formularios ya envían
+  con `method="post"` hacia `procesar_registro.php`. Los datos del paso 1 se
+  conservan en `$_SESSION` entre paso y paso (nunca viajan por la URL), y el
+  guardado de usuario + moto ocurre en **una sola transacción SQL** (HU-04).
+
+## Backend (Sprint 1 · Tareas 2, 3, 6 y 8)
+
+Detrás del frontend hay una capa PHP sencilla, sin framework:
+
+- **`app/includes/conexion.php`** — función `sacam_conexion()` que devuelve una
+  instancia PDO reutilizable (singleton) leída de `config/config.local.php`.
+  Excepciones de PDO activadas y sentencias preparadas reales (anti-SQL
+  injection).
+- **`app/includes/validaciones.php`** — validación de servidor que siempre corre
+  (la de JavaScript es solo experiencia de usuario): campos obligatorios,
+  correo con `filter_var`, tipo de placa → estado derivado, y fotografía
+  verificada por **contenido real** (`mime_content_type`, no el MIME del
+  navegador), JPG/PNG y máximo 5 MB.
+- **`app/procesos/procesar_registro.php`** — recibe ambos pasos del trámite:
+  - **paso 1:** valida, detecta duplicados (correo/identificador ya en BD),
+    guarda la foto de credencial y deja los datos en sesión.
+  - **paso 2:** valida la moto, guarda su foto y ejecuta `BEGIN TRANSACTION` →
+    `INSERT usuarios` + `INSERT motocicletas` → `COMMIT`. Si algo falla,
+    `ROLLBACK` y se eliminan los archivos subidos para no dejar residuos.
+  - Errores (duplicado, imagen inválida, campos vacíos) regresan al formulario
+    con mensajes en cada campo y los valores previos conservados.
+- **`public/procesar_registro.php`** — entrada pública mínima: solo incluye la
+  lógica de `app/`, que por seguridad no puede pedirse por URL directamente.
+
+**Seguridad básica aplicada:** sentencias preparadas (no se concatena nunca
+SQL con datos del usuario), nombres de archivo aleatorios (imposible enumerar
+los de otros), verificación del tipo real de la imagen y salida con
+`htmlspecialchars()` en cada valor pintado en pantalla.
+
+### Cómo configurar y probar localmente
+
+1. Monta la base de datos:
+   ```bash
+   mysql -u usuario -p < database/sacam_bd_sprint1.sql
+   ```
+2. Crea tu configuración local a partir de la plantilla y anota tus
+   credenciales (si tu host usa otra contraseña, cámbiala ahí):
+   ```bash
+   cp config/config.ejemplo.php config/config.local.php
+   ```
+   `config.local.php` está en `.gitignore`: nunca se sube al repo.
+3. Asegúrate de que `uploads/` tenga escritura (las fotos se guardan en
+   `uploads/credenciales/` y `uploads/motocicletas/`).
+4. Levanta el servidor y abre `http://localhost:8000/index.php`:
+   ```bash
+   php -S localhost:8000 -t public
+   ```
+5. Completa los tres pasos: **Datos personales → Motocicleta → Confirmación**.
+   La confirmación muestra el folio asignado y los datos pueden verificarse en
+   la base de datos.
 
 ### Previsualizar el frontend
 
@@ -167,10 +220,14 @@ Y abrir `http://localhost:8000/index.php` en el navegador.
 
 ## Definition of Done (Sprint 1)
 
-- El formulario correspondiente guarda correctamente en la BD.
+Criterios cumplidos:
+
+- El formulario correspondiente guarda correctamente en la BD (usuario + moto en transacción).
 - Validaciones de servidor (no solo de cliente) funcionando.
 - Imágenes guardadas con nombre único en la carpeta correcta.
 - Probado manualmente: caso exitoso, campo obligatorio vacío, imagen inválida y permiso provisional sin placa.
+
+Evidencia de las pruebas end-to-end en [`docs/sprint1/sprint1.md`](docs/sprint1/sprint1.md) (sección 6).
 
 ## Privacidad
 
