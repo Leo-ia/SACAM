@@ -32,7 +32,7 @@ require __DIR__ . '/../app/vistas/partials/header.php';
             <label for="tipo_persona">Tipo de persona</label>
             <select id="tipo_persona" name="tipo_persona" required>
                 <option value="" disabled <?= empty($viejo['tipo_persona']) ? 'selected' : '' ?>>Selecciona una opción</option>
-                <?php foreach (['alumno', 'docente', 'administrativo', 'intendencia', 'otro'] as $opcion): ?>
+                <?php foreach (['alumno', 'docente', 'administrativo', 'intendencia'] as $opcion): ?>
                     <option value="<?= $opcion ?>" <?= ($viejo['tipo_persona'] ?? '') === $opcion ? 'selected' : '' ?>>
                         <?= ucfirst($opcion) ?>
                     </option>

@@ -12,8 +12,7 @@ CREATE TABLE IF NOT EXISTS usuarios
     tipo_persona            ENUM('alumno',
                                  'docente',
                                  'administrativo',
-                                 'intendencia',
-                                 'otro')               NOT NULL,
+                                 'intendencia')          NOT NULL,
     identificador_institucional
                             VARCHAR(20)                 NOT NULL,
     nombre_completo         VARCHAR(120)                NOT NULL,

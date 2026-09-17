@@ -12,7 +12,6 @@ $tipos_persona = [
     'docente'        => 'Docente',
     'administrativo' => 'Administrativo',
     'intendencia'    => 'Intendencia',
-    'otro'           => 'Otro',
 ];
 
 $pendiente = ($registro['tipo_placa'] ?? '') === 'permiso_provisional';

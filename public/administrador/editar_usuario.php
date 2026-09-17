@@ -52,7 +52,7 @@ $valores = $viejo ?: $usuario;
         <div>
             <label for="tipo_persona">Tipo de persona</label><br>
             <select id="tipo_persona" name="tipo_persona" required>
-                <?php foreach (['alumno', 'docente', 'administrativo', 'intendencia', 'otro'] as $opcion): ?>
+                <?php foreach (['alumno', 'docente', 'administrativo', 'intendencia'] as $opcion): ?>
                     <option value="<?= $opcion ?>" <?= ($valores['tipo_persona'] ?? '') === $opcion ? 'selected' : '' ?>>
                         <?= ucfirst($opcion) ?>
                     </option>

@@ -17,7 +17,7 @@ function sacam_validar_usuario(array $entrada): array
     $correo_electronico       = trim($entrada['correo_electronico'] ?? '');
     $licencia_permiso         = trim($entrada['licencia_permiso'] ?? '');
 
-    if (!in_array($tipo_persona, ['alumno', 'docente', 'administrativo', 'intendencia', 'otro'], true)) {
+    if (!in_array($tipo_persona, ['alumno', 'docente', 'administrativo', 'intendencia'], true)) {
         $errores['tipo_persona'] = 'Selecciona un tipo de persona válido.';
     }
 
