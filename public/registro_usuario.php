@@ -3,9 +3,6 @@ session_start();
 $titulo_pagina = 'SACAM · Registro de usuario — ESCOM';
 $paso_actual = 1;
 
-// Errores y valores previos: vienen como mensaje flash desde el backend
-// (app/procesos/procesar_registro.php) cuando una validación falló. Se consumen
-// una sola vez para que un error no se repita al recargar la página.
 $errores = $_SESSION['registro_errores'] ?? [];
 $viejo   = $_SESSION['registro_viejo']   ?? [];
 unset($_SESSION['registro_errores'], $_SESSION['registro_viejo']);

@@ -1,16 +1,6 @@
-<?php
-/**
- * Aviso de privacidad simplificado (frontend, Sprint 1 · Tarea 9).
- *
- * El IPN, como sujeto obligado por la Ley General de Protección de Datos
- * Personales en Posesión de Sujetos Obligados (LGPDPPSO), debe informar qué
- * datos recaba y para qué antes de recabarlos. Se incluye una sola vez, en
- * el primer formulario del trámite (registro_usuario.php), porque ahí es
- * donde se recaban los primeros datos personales y fotografías.
- */
-?>
+<?php ?>
 <div class="aviso-privacidad">
-    <h3 class="aviso-privacidad__titulo">Aviso de privacidad simplificado</h3>
+    <h3 class="aviso-privacidad__titulo">Aviso de privacidad</h3>
     <p class="aviso-privacidad__texto">
         El Instituto Politécnico Nacional recaba tu nombre, identificador
         institucional, correo electrónico y las fotografías de tu credencial

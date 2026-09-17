@@ -3,8 +3,6 @@ session_start();
 $titulo_pagina = 'SACAM · Confirmación de registro — ESCOM';
 $paso_actual = 3;
 
-// La confirmación solo aparece después de que el backend insertó usuario + moto
-// (app/procesos/procesar_registro.php) y guardó aquí el folio de la operación.
 $registro = $_SESSION['confirmacion'] ?? null;
 
 require __DIR__ . '/../app/vistas/partials/header.php';
@@ -63,7 +61,6 @@ $pendiente = ($registro['tipo_placa'] ?? '') === 'permiso_provisional';
         </div>
     </dl>
 
-    <?php // La confirmación se consume una sola vez: recargar no duplica el registro. ?>
     <?php unset($_SESSION['confirmacion']); ?>
     <?php endif; ?>
 

@@ -176,8 +176,8 @@ Son dos decisiones distintas:
 
 ### 4.1 Por qué no en la BD
 
-Es el **requisito explícito de este avance**. Además, el esquema ya tiene
-comentada la tabla `cuentas_acceso` (con `password_hash`) para el Sprint 2;
+Es el **requisito explícito de este avance**. Además, el plan del Sprint 2
+prevé crear la tabla `cuentas_acceso` (con `password_hash`);
 cuando exista, el código se actualiza para preguntarle a la BD en lugar de
 comparar contra variables fijas. Mientras tanto, comparar contra variables
 fijas es la forma más simple de "simular" un usuario único sin montar

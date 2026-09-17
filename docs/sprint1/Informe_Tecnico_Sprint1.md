@@ -99,19 +99,17 @@ no deben versionarse.
 
 ## 5. Diseno de la base de datos
 
-Archivo: `database/sacam_bd_sprint1.sql` (221 lineas).
+Archivo: `database/sacam_bd_sprint1.sql` (70 lineas).
 
 ### 5.1 Bloques del script y referencias
 
 | Seccion | Lineas | Contenido |
 |---|---|---|
-| Encabezado y decisiones de diseno | 1-38 | Metadatos del proyecto y las 8 consideraciones de diseno |
-| Creacion del schema | 40-50 | `CREATE DATABASE IF NOT EXISTS sacam` con utf8mb4 |
-| Tabla `usuarios` | 52-97 | Formulario HU-02 (dueno de la moto) |
-| Tabla `motocicletas` | 99-153 | Formulario HU-03 (moto, relacion 1:N) |
-| Seguridad | 155-164 | Usuario de aplicacion con privilegios minimos (comentado) |
-| Datos de ejemplo | 166-178 | Casos de prueba manual (comentados) |
-| Modulos futuros | 180-221 | QR, cuentas de acceso y bitacora (comentados, Sprint 2+) |
+| Semilla de la base de datos | 1-7 | `CREATE DATABASE IF NOT EXISTS sacam` con utf8mb4 y `USE sacam` |
+| Tabla `usuarios` | 9-34 | Formulario HU-02 (dueno de la moto) con sus restricciones de unicidad |
+| Indice | 36-37 | `idx_usuarios_identificador` para busquedas por boleta/empleado |
+| Tabla `motocicletas` | 39-67 | Formulario HU-03 (moto, relacion 1:N) con `CHECK` y FK en cascada |
+| Indice | 69-70 | `idx_motocicletas_usuario_estado` para listar las motos de un usuario |
 
 ### 5.2 Decisiones de diseno principales (justificacion)
 
@@ -128,37 +126,38 @@ Archivo: `database/sacam_bd_sprint1.sql` (221 lineas).
 3. **Unicidad compuesta en el identificador.** La boleta de un alumno puede
    coincidir numericamente con el numero de empleado de un docente. Por eso
    la restriccion es `UNIQUE (tipo_persona, identificador_institucional)`
-   (lineas 83-85) y no solo sobre el identificador.
+   (lineas 28-29) y no solo sobre el identificador.
 
-4. **Un correo, una cuenta.** `UNIQUE (correo_electronico)` (lineas 87-89)
+4. **Un correo, una cuenta.** `UNIQUE (correo_electronico)` (lineas 30-31)
    impide duplicados; la colacion insensible a mayusculas hace que
    `ANA@correo.com` y `ana@correo.com` se traten como el mismo.
 
 5. **Regla de negocio garantizada a nivel de BD.** La moto queda
    `pendiente_actualizacion` si y solo si el tramite es
-   `permiso_provisional` (lineas 129-136). Se implemento como
+   `permiso_provisional` (lineas 57-60). Se implemento como
    `CHECK (estado = 'pendiente_actualizacion') = (tipo_placa = 'permiso_provisional')`.
    Aunque la capa de aplicacion tambien validara (tareas 3 y 8), la base
    rechaza datos inconsistentes aunque alguien escriba SQL directo.
 
 6. **Clave foranea con `ON DELETE CASCADE`.** Una moto sin dueno no tiene
-   sentido (lineas 138-143). Si se elimina el usuario, se eliminan sus motos;
+   sentido (lineas 61-64). Si se elimina el usuario, se eliminan sus motos;
    nunca quedan filas huerfanas apuntando a un id inexistente.
 
 7. **Auditoria automatica.** `created_at` y `updated_at` con
-   `DEFAULT CURRENT_TIMESTAMP ... ON UPDATE CURRENT_TIMESTAMP` (lineas 77-79
-   y 123-125) registran cuándo se creo y modifico cada fila sin escribir una
+   `DEFAULT CURRENT_TIMESTAMP ... ON UPDATE CURRENT_TIMESTAMP` (lineas 23-25
+   y 52-54) registran cuándo se creo y modifico cada fila sin escribir una
    sola linea de codigo en la aplicacion.
 
 8. **Indices pensados para los proximos sprints.** `idx_usuarios_identificador`
-   (lineas 95-97) prepara las busquedas del guardia por boleta/empleado;
-   `idx_motocicletas_usuario_estado` (lineas 149-153) prepara "listar motos
+   (lineas 36-37) prepara las busquedas del guardia por boleta/empleado;
+   `idx_motocicletas_usuario_estado` (lineas 69-70) prepara "listar motos
    de un usuario" que usara el panel en el Sprint 2.
 
-9. **Extensibilidad sin rediseno.** Las secciones de modulos futuros
-   (lineas 180-221) ya dejan el `ALTER` de QR y el DDL de `cuentas_acceso`
-   y `accesos` documentados y funcionales; se aplicaran en su sprint sin
-   reconstruir el schema.
+9. **Extensibilidad sin rediseno.** El esquema queda listo para que los
+   Sprints 2+ agreguen QR, cuentas de acceso o bitacora con nuevos `ALTER
+   TABLE`/`CREATE TABLE`. El script se mantiene minimo y legible: se quitaron
+   las secciones que lo inflaban (datos de ejemplo y modulos futuros); esos
+   modulos se documentaran en su propio sprint.
 
 ### 5.3 Mapeo con las historias de usuario
 

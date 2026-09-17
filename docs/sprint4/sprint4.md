@@ -68,9 +68,9 @@ prevé el esquema de `database/sacam_bd_sprint1.sql`).
   docente lo reprobaría. Con sesión PHP el resultado es idéntico en pantalla
   (un formulario simple) pero las credenciales viven solo en el servidor.
 - **Por qué credenciales fijas en código y no en la BD.** Es un requisito
-  explícito de este avance. En el Sprint 2 el esquema de la BD ya contempla la
-  tabla de cuentas de acceso (comentada en `sacam_bd_sprint1.sql`), así que
-  este código se descartará cuando exista la tabla real.
+  explícito de este avance. En el Sprint 2 se creará la tabla de cuentas de
+  acceso (`cuentas_acceso`) con `password_hash`; este código se descartará
+  cuando esa tabla exista.
 - **`hash_equals()` para comparar** usuario y contraseña: evita ataques de
   timing y es la forma correcta de comparar credenciales.
 - **`requiere_login.php` también en los procesadores.** Proteger solo las

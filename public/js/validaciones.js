@@ -1,18 +1,3 @@
-/**
- * SACAM — Validación de cliente (Sprint 1, frontend).
- *
- * Reglas del backlog que cubre este archivo:
- *   - Si falta un campo obligatorio, el formulario no se envía y muestra el
- *     error junto al campo (no una alerta genérica).
- *   - Si el correo no tiene formato válido, se rechaza con mensaje claro.
- *   - Si la imagen no es JPG/PNG o excede el tamaño máximo, se rechaza antes
- *     de intentar guardarse.
- *
- * Importante: esta validación es solo de experiencia de usuario. La
- * validación real y obligatoria ocurre en el servidor (tareas 6 y 8), porque
- * cualquier persona puede desactivar JavaScript o saltarse el navegador.
- */
-
 (function () {
   'use strict';
 
@@ -25,10 +10,6 @@
     configurarFormulariosValidados();
   });
 
-  /* -----------------------------------------------------------------------
-     Registro de usuario: el identificador cambia de nombre según el tipo
-     de persona (boleta para alumnado, número de empleado para el resto).
-     ----------------------------------------------------------------------- */
   function configurarEtiquetaIdentificador() {
     var selectorTipo = document.getElementById('tipo_persona');
     var etiqueta = document.getElementById('etiqueta_identificador');
@@ -58,10 +39,6 @@
     actualizar();
   }
 
-  /* -----------------------------------------------------------------------
-     Registro de motocicleta: la placa cambia de nombre/ayuda si la moto
-     todavía no tiene placa definitiva (permiso provisional).
-     ----------------------------------------------------------------------- */
   function configurarEtiquetaPlaca() {
     var opciones = document.querySelectorAll('input[name="tipo_placa"]');
     var etiqueta = document.getElementById('etiqueta_placa');
@@ -85,14 +62,9 @@
     actualizar();
   }
 
-  /* -----------------------------------------------------------------------
-     Validación de los formularios del trámite.
-     ----------------------------------------------------------------------- */
   function configurarFormulariosValidados() {
     var formularios = document.querySelectorAll('form.js-validar');
     formularios.forEach(function (formulario) {
-      // Revalida un campo apenas la persona lo corrige, para que el error
-      // desaparezca sin tener que volver a enviar el formulario.
       formulario.querySelectorAll('input, select').forEach(function (campo) {
         var evento = campo.type === 'file' || campo.tagName === 'SELECT' ? 'change' : 'input';
         campo.addEventListener(evento, function () {

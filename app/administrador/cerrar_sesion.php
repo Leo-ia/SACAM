@@ -1,7 +1,4 @@
 <?php
-/**
- * SACAM - Cierre de sesion del administrador.
- */
 session_start();
 
 unset($_SESSION['admin_autenticado']);

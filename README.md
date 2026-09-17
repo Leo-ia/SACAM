@@ -44,7 +44,7 @@ Flujo funcional de registro del propietario y su moto. **Objetivo del sprint:** 
 | 6 | Procesamiento backend del formulario de usuario | 2,3,5 | Hecho |
 | 7 | Formulario de registro de moto (frontend)       | 6    | Hecho (frontend) |
 | 8 | Procesamiento backend del formulario de moto (transacción) | 2,3,7 | Hecho |
-| 9 | Aviso de privacidad simplificado (LGPDPPSO)    | 5,7  | Hecho (frontend, en registro_usuario.php) |
+| 9 | Aviso de privacidad (LGPDPPSO)    | 5,7  | Hecho (frontend, en registro_usuario.php) |
 | 10 | Pruebas manuales del flujo completo            | todas | Hecho (9/9 casos) |
 
 El flujo completo ya guarda en la base de datos de punta a punta: los datos
@@ -152,7 +152,7 @@ recibe el `POST` del formulario y delega la lógica real a
 
 ## Base de datos (Sprint 1 · Tarea 1)
 
-El esquema vive en [`database/sacam_bd_sprint1.sql`](database/sacam_bd_sprint1.sql). Diseño pensado para **no rediseñarse** cuando lleguen QR, cuentas de guardia/administrador y bitácora (esa parte se entrega comentada, para su sprint).
+El esquema vive en [`database/sacam_bd_sprint1.sql`](database/sacam_bd_sprint1.sql). Diseño pensado para **no rediseñarse** cuando lleguen QR, cuentas de guardia/administrador y bitácora (se agregarán con nuevos `ALTER`/`CREATE` en su sprint, sin reconstruir el esquema).
 
 - **`usuarios`** → dueño de la moto (tipo de persona, identificador institucional único por tipo, nombre, correo único validado, ruta de foto de credencial, licencia opcional).
 - **`motocicletas`** → pertenece a un usuario (FK 1:N con `ON DELETE CASCADE`), marca/modelo/color, placa o permiso provisional, y estado `pendiente_actualizacion` garantizado por `CHECK` cuando el trámite es provisional.
@@ -297,4 +297,4 @@ Evidencia de las pruebas end-to-end en [`docs/sprint1/sprint1.md`](docs/sprint1/
 
 ## Privacidad
 
-El IPN, al ser sujeto obligado por la LGPDPPSO, debe informar qué datos se recaban antes de recabarlos. Por eso los formularios del sprint incluyen un **aviso de privacidad simplificado** con checkbox de aceptación, y las fotos personales **nunca se versionan** en este repositorio (ver `.gitignore`).
+El IPN, al ser sujeto obligado por la LGPDPPSO, debe informar qué datos se recaban antes de recabarlos. Por eso los formularios del sprint incluyen un **aviso de privacidad** con checkbox de aceptación, y las fotos personales **nunca se versionan** en este repositorio (ver `.gitignore`).

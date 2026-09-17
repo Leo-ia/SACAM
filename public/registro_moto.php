@@ -3,15 +3,12 @@ session_start();
 $titulo_pagina = 'SACAM · Registro de motocicleta — ESCOM';
 $paso_actual = 2;
 
-// El paso 2 solo tiene sentido después de completar el paso 1: los datos
-// personales viajan en sesión (nunca por la URL) y aquí solo se muestran.
 $datos_usuario = $_SESSION['registro']['usuario'] ?? null;
 if ($datos_usuario === null) {
     header('Location: registro_usuario.php');
     exit;
 }
 
-// Errores y valores previos del paso 2 (flash del backend).
 $errores = $_SESSION['registro_errores'] ?? [];
 $viejo   = $_SESSION['registro_viejo']   ?? [];
 unset($_SESSION['registro_errores'], $_SESSION['registro_viejo']);

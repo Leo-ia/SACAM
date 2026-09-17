@@ -1,16 +1,4 @@
 <?php
-/**
- * Encabezado institucional reutilizable (frontend, Sprint 1).
- *
- * Variables opcionales que la página debe definir ANTES de incluir este
- * archivo:
- *   $titulo_pagina  (string) Título mostrado en la pestaña del navegador.
- *   $paso_actual    (int)    1, 2 o 3 cuando la página forma parte del
- *                             trámite de registro (registro_usuario.php,
- *                             registro_moto.php, confirmacion.php). Se omite
- *                             en páginas que no son parte del flujo, como
- *                             index.php.
- */
 $titulo_pagina = $titulo_pagina ?? 'SACAM · ESCOM, IPN';
 ?>
 <!DOCTYPE html>

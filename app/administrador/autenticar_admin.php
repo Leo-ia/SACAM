@@ -1,14 +1,6 @@
 <?php
-/**
- * SACAM - Login del administrador (validacion por coincidencia en PHP).
- *
- * De proposito NO usa la base de datos ni una tabla de cuentas de admin: las
- * credenciales estan fijas en el codigo para este avance minimo. En Sprint 2
- * el esquema ya tiene prevista la tabla `cuentas_acceso` con password_hash.
- */
 session_start();
 
-// Credenciales fijas del avance minimo. Comparacion en tiempo constante.
 $usuario_correcto = 'admin';
 $clave_correcta = '1234';
 

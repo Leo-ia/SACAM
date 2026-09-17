@@ -23,12 +23,9 @@ if (!$stmt->fetch()) {
     exit;
 }
 
-// Se reutilizan las validaciones de app/includes/validaciones.php (HU-02).
 $validacion = sacam_validar_usuario($_POST);
 $errores    = $validacion['errores'];
 
-// Duplicados: el correo/identificador debe seguir siendo único, pero
-// excluir al propio usuario que se está editando.
 if ($errores === []) {
     $stmt = $pdo->prepare(
         'SELECT id FROM usuarios

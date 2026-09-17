@@ -1,23 +1,4 @@
 <?php
-/**
- * SACAM — Validaciones del servidor, reutilizables (Sprint 1 · Tarea 3).
- *
- * Regla de oro del proyecto: la validación de JavaScript es SOLO experiencia
- * de usuario. Cualquier persona puede desactivar JS o manipular los datos que
- * envía el formulario, por lo tanto TODA entrada de un formulario pasa por
- * estas funciones antes de tocar la base de datos (tareas 6 y 8).
- */
-
-/**
- * Devuelve el tipo de placa y su estado derivado para la tabla motocicletas.
- *
- * El esquema de la BD garantiza la regla con un CHECK: una moto queda
- * `pendiente_actualizacion` si y solo si su placa es `permiso_provisional`.
- * Este arreglo se mapea aquí para que el backend siempre envíe el par correcto.
- *
- * @param string $tipo_placa Valor recibido del formulario ('con_placa' | 'permiso_provisional').
- * @return array{tipo_placa: string, estado: string}
- */
 function sacam_tipo_placa_validado(string $tipo_placa): array
 {
     if ($tipo_placa === 'permiso_provisional') {
@@ -26,12 +7,6 @@ function sacam_tipo_placa_validado(string $tipo_placa): array
     return ['tipo_placa' => 'con_placa', 'estado' => 'activa'];
 }
 
-/**
- * Valida los datos personales del formulario HU-02 y devuelve los errores.
- *
- * @param array{dato: string} ... sin tipo estricto: puede venir de $_POST.
- * @return array{valores: array<string, string>, errores: array<string, string>}
- */
 function sacam_validar_usuario(array $entrada): array
 {
     $errores = [];
@@ -58,8 +33,6 @@ function sacam_validar_usuario(array $entrada): array
         $errores['correo_electronico'] = 'Escribe un correo electrónico válido.';
     }
 
-    // Licencia es opcional; si se captura, solo se limita su longitud
-    // (dato informativo: el sistema no valida vigencia ni autenticidad).
     if ($licencia_permiso !== '' && mb_strlen($licencia_permiso) > 30) {
         $errores['licencia_permiso'] = 'La licencia o permiso debe tener máximo 30 caracteres.';
     }
@@ -76,11 +49,6 @@ function sacam_validar_usuario(array $entrada): array
     ];
 }
 
-/**
- * Valida los datos de la motocicleta del formulario HU-03.
- *
- * @return array{valores: array<string, string>, errores: array<string, string>}
- */
 function sacam_validar_motocicleta(array $entrada): array
 {
     $errores = [];
@@ -120,17 +88,6 @@ function sacam_validar_motocicleta(array $entrada): array
     ];
 }
 
-/**
- * Valida una fotografía subida (JPG/PNG, máximo 5 MB) y devuelve su extensión.
- *
- * La verificación la hace el propio servidor leyendo los bytes del archivo
- * (TIPO DE ARCHIVO REAL), no el MIME declarado por el navegador, que se puede
- * falsear. Tamaño máximo: 5 MB, igual que en el cliente.
- *
- * @return array{ruta_relativa: string, extension: string} o arroja \UnexpectedValueException.
- * @throws RuntimeException Cuando el archivo no cumple formato o tamaño.
- * @throws UnexpectedValueException Cuando no llega ningún archivo (campo vacío).
- */
 function sacam_validar_imagen(array $archivo, string $campo_archivo): array
 {
     if (($archivo['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
@@ -141,7 +98,7 @@ function sacam_validar_imagen(array $archivo, string $campo_archivo): array
         throw new UnexpectedValueException("Error al subir $campo_archivo (código {$archivo['error']}).");
     }
 
-    $tamano_maximo = 5 * 1024 * 1024; // 5 MB
+    $tamano_maximo = 5 * 1024 * 1024;
     if ($archivo['size'] > $tamano_maximo) {
         throw new UnexpectedValueException("$campo_archivo pesa más de 5 MB. Elige un archivo más ligero.");
     }
@@ -153,7 +110,7 @@ function sacam_validar_imagen(array $archivo, string $campo_archivo): array
     }
 
     return [
-        'ruta_relativa' => '', // Se llena en procesar_registro.php tras guardar el archivo
+        'ruta_relativa' => '',
         'extension'     => $extension,
     ];
 }

@@ -40,7 +40,7 @@ administración: eso se definió para el Sprint 2 en adelante.
 | 6 | Procesamiento backend del formulario de usuario | Hecho | `app/procesos/procesar_registro.php` (paso 1) |
 | 7 | Formulario de registro de moto (frontend) | Hecho | `public/registro_moto.php` |
 | 8 | Procesamiento backend del formulario de moto (transacción) | Hecho | `app/procesos/procesar_registro.php` (paso 2, transacción HU-04) |
-| 9 | Aviso de privacidad simplificado en ambos formularios | Hecho (en el primer formulario) | `app/vistas/partials/aviso_privacidad.php`, incluido en `registro_usuario.php` |
+| 9 | Aviso de privacidad en ambos formularios | Hecho (en el primer formulario) | `app/vistas/partials/aviso_privacidad.php`, incluido en `registro_usuario.php` |
 | 10 | Pruebas manuales del flujo completo | Hecho (9/9) | Ver sección 6 (pruebas end-to-end con guardado real) |
 
 ## 4. Qué se construyó en este corte (frontend + backend)
@@ -147,7 +147,7 @@ El objetivo del Sprint 1 (registro con persistencia) está cubierto. Queda
 abierto hacia los siguientes sprints:
 
 - Sprint 2 — QR único por motocicleta y cuentas de guardia/administrador
-  (esquema ya comentado al final de `database/sacam_bd_sprint1.sql`).
+  (se agregan con nuevos `ALTER TABLE`/`CREATE TABLE`, sin rediseño).
 - Sprint 2/3 — bitácora de accesos (`accesos`), login por sesión y panel de
   administración.
 - Definir el manejo centralizado de errores para producción (logs sin exponer
