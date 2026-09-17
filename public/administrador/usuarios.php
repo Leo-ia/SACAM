@@ -1,5 +1,5 @@
 <?php
-session_start();
+require __DIR__ . '/../../app/administrador/requiere_login.php';
 require_once __DIR__ . '/../../app/includes/conexion.php';
 
 $pdo = sacam_conexion();
@@ -16,7 +16,7 @@ $usuarios = $stmt->fetchAll();
 </head>
 <body>
     <h1>Listado de usuarios</h1>
-    <p><a href="../index.php">Volver al inicio</a></p>
+    <p><a href="../index.php">Volver al inicio</a> | <a href="cerrar_sesion.php">Cerrar sesión</a></p>
 
     <table border="1" cellpadding="6" cellspacing="0">
         <thead>

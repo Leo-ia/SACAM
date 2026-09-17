@@ -1,5 +1,5 @@
 <?php
-session_start();
+require __DIR__ . '/../../app/administrador/requiere_login.php';
 require_once __DIR__ . '/../../app/includes/conexion.php';
 
 $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
@@ -38,6 +38,8 @@ $valores = $viejo ?: $usuario;
         <a href="ver_usuario.php?id=<?= $id ?>">Volver a ver usuario</a>
         |
         <a href="usuarios.php">Volver al listado</a>
+        |
+        <a href="cerrar_sesion.php">Cerrar sesión</a>
     </p>
 
     <?php if (!empty($errores['general'])): ?>

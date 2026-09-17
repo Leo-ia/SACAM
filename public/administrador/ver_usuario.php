@@ -1,4 +1,5 @@
 <?php
+require __DIR__ . '/../../app/administrador/requiere_login.php';
 require_once __DIR__ . '/../../app/includes/conexion.php';
 
 $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
@@ -36,6 +37,8 @@ $motos = $stmt_motos->fetchAll();
         <a href="usuarios.php">Volver al listado</a>
         |
         <a href="editar_usuario.php?id=<?= $id ?>">Editar</a>
+        |
+        <a href="cerrar_sesion.php">Cerrar sesión</a>
     </p>
 
     <?php if ($usuario['activo']): ?>

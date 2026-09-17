@@ -6,4 +6,5 @@
  * pedirse por URL. Este archivo solo delega la lógica real a
  * app/administrador/procesar_estado_usuario.php.
  */
+require __DIR__ . '/../../app/administrador/requiere_login.php';
 require __DIR__ . '/../../app/administrador/procesar_estado_usuario.php';

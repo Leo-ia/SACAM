@@ -66,7 +66,7 @@ require __DIR__ . '/../app/vistas/partials/header.php';
 </section>
 
 <p class="texto-guia" style="margin-top:2rem;">
-    Acceso interno · <a href="administrador/usuarios.php">Panel de administración</a>
+    Acceso interno · <a href="administrador/login.php">Panel de administración</a>
 </p>
 
 <?php require __DIR__ . '/../app/vistas/partials/footer.php'; ?>
