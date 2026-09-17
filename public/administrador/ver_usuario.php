@@ -105,7 +105,7 @@ $motos = $stmt_motos->fetchAll();
         <p>No tiene motocicletas registradas.</p>
     <?php else: ?>
         <?php foreach ($motos as $i => $moto): ?>
-            <h3>Motocicleta #<?= $i + 1 ?></h3>
+            <h3>Motocicleta #<?= $i + 1 ?> <a href="editar_moto.php?id=<?= (int) $moto['id'] ?>">Editar</a></h3>
             <table border="1" cellpadding="6" cellspacing="0">
                 <tr>
                     <th>ID</th>
