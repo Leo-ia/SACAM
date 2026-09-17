@@ -13,3 +13,4 @@ config/config.local.php
 *.log
 .DS_Store
 Thumbs.db
+.obsidian/
