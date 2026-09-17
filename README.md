@@ -54,6 +54,35 @@ Detalle completo en [`docs/sprint1/sprint1.md`](docs/sprint1/sprint1.md).
 
 **Historias de usuario:** HU-01 página de inicio · HU-02 registro de usuario · HU-03 registro de motocicleta · HU-04 persistencia confiable (transacción todo-o-nada).
 
+### Sprint 3 (panel de administración)
+Cinco pantallas del perfil administrador sobre los usuarios registrados:
+listado, ver detalle, editar, revocar/restaurar acceso y eliminar (en cascada
+con las motos). Detalle en [`docs/sprint3/sprint3.md`](docs/sprint3/sprint3.md).
+
+| # | Tarea | Estado |
+|---|---|---|
+| 1 | Listado de usuarios con estado (`Activo` / revocado) | Hecho |
+| 2 | Ver usuario con sus motos y botón revocar/restaurar | Hecho |
+| 3 | Editar usuario (precarga + backend con validación) | Hecho |
+| 4 | Revocación/restauración de acceso (columna `activo`) | Hecho |
+| 5 | Eliminar usuario con confirmación y borrado en cascada | Hecho |
+| 6 | `database/alter_admin_sprint.sql` (`activo BOOLEAN DEFAULT TRUE`) | Hecho |
+
+### Sprint 4 (login de administrador)
+Protege todo el panel del Sprint 3: las páginas y los procesadores exigen
+sesión; sin ella se redirige a `administrador/login.php`. Credenciales del
+avance: **usuario `admin`, contraseña `1234`** (fijas en el código, sin tabla
+en BD; al término del Sprint 2 se migrarán a la tabla de cuenta de acceso).
+Detalle en [`docs/sprint4/sprint4.md`](docs/sprint4/sprint4.md).
+
+| # | Tarea | Estado |
+|---|---|---|
+| 1 | Pantalla de login (`public/administrador/login.php`) | Hecho |
+| 2 | Guarda de sesión `requiere_login.php` en páginas y POST del panel | Hecho |
+| 3 | Autenticación por sesión PHP (`admin` / `1234` con `hash_equals`) | Hecho |
+| 4 | Cierre de sesión | Hecho |
+| 5 | Prueba automatizada `test_admin.sh` (27/27) | Hecho |
+
 ## Estructura de carpetas
 
 La división de carpetas ya está pensada para **todo el proyecto** (los tres
@@ -73,13 +102,19 @@ SACAM/
 │   ├── vistas/
 │   │   └── partials/       # Header, footer y aviso de privacidad reutilizables
 │   ├── guardia/            # Lógica del perfil guardia — Sprint 2+
-│   └── administrador/      # Lógica del perfil administrador — Sprint 3+
+│   └── administrador/      # Sprint 3+ · panel admin
+│       ├── requiere_login.php    # Guarda de sesión (Sprint 4)
+│       ├── autenticar_admin.php  # Login `admin`/`1234` (Sprint 4)
+│       ├── cerrar_sesion.php     # Logout (Sprint 4)
+│       └── procesar_*.php        # Editar / estado / eliminar (Sprint 3)
 ├── config/
 │   └── config.local.php    # Credenciales de la BD (gitignored; copiar desde el template)
 ├── database/
 │   └── sacam_bd_sprint1.sql   # ← Tarea 1 · esquema de la BD (entregable actual)
 ├── docs/
-│   └── sprint1/             # Análisis y evidencia del sprint
+│   ├── sprint1/            # Análisis y evidencia del sprint
+│   ├── sprint3/            # Panel de administración (CRUD + revocación)
+│   └── sprint4/            # Login de administrador
 ├── public/                  # Raíz pública del servidor web (document root)
 │   ├── css/estilos.css      # Colores IPN: guinda #750946, gris #636569
 │   ├── js/validaciones.js   # Validación de cliente (HU-02, HU-03)
@@ -90,7 +125,13 @@ SACAM/
 │   ├── procesar_registro.php# Punto de entrada del backend (delega en app/)
 │   ├── confirmacion.php     # Paso 3 · confirmación
 │   ├── guardia/              # Páginas del perfil guardia — Sprint 2+
-│   └── administrador/        # Páginas del perfil administrador — Sprint 3+
+│   └── administrador/        # Sprint 3+ · panel admin
+│       ├── login.php         # Sprint 4 · acceso (admin / 1234)
+│       ├── usuarios.php      # Sprint 3 · listado
+│       ├── ver_usuario.php   # Sprint 3 · detalle + revocar
+│       ├── editar_usuario.php# Sprint 3 · edición
+│       ├── autenticar_admin.php / cerrar_sesion.php  # Sprint 4 · puertas públicas del login
+│       └── procesar_*.php    # Sprint 3 · puertas públicas del backend admin
 └── uploads/                 # Archivos subidos (fuera del control de versiones)
     ├── credenciales/        # Fotos de credencial IPN (LGPDPPSO)
     └── motocicletas/        # Fotos de las motos
@@ -217,6 +258,31 @@ php -S localhost:8000 -t public
 ```
 
 Y abrir `http://localhost:8000/index.php` en el navegador.
+
+## Panel de administración (Sprints 3 y 4)
+
+Las cinco pantallas del panel viven en `public/administrador/` y su lógica en
+`app/administrador/`:
+
+- **Sprint 3** — `usuarios.php` (listado), `ver_usuario.php` (detalle y
+  revocar/restaurar acceso), `editar_usuario.php` (edición) y sus tres
+  procesadores. La columna `activo` que controla la revocación se agrega con
+  `database/alter_admin_sprint.sql`.
+- **Sprint 4** — login por sesión PHP. Credenciales del avance: **`admin` /
+  `1234`**, fijas en `app/administrador/autenticar_admin.php` (no hay tabla de
+  cuentas en la BD; se migrará a la tabla del Sprint 2). Toda página o POST del
+  panel pasa por `app/administrador/requiere_login.php`; sin sesión se
+  redirige a `administrador/login.php`.
+
+Para probar localmente:
+
+```bash
+# acceso
+http://127.0.0.1:8000/administrador/login.php   # admin / 1234
+# listado y detalle
+http://127.0.0.1:8000/administrador/usuarios.php
+http://127.0.0.1:8000/administrador/ver_usuario.php?id=1
+```
 
 ## Definition of Done (Sprint 1)
 
